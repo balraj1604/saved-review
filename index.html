@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Saved-Posts Review &middot; 42 posts</title>
+<style>
+  :root{
+    --bg: oklch(15% 0.01 260); --panel: oklch(20% 0.012 260); --panel-2: oklch(24% 0.014 260);
+    --ink: oklch(95% 0.01 90); --muted: oklch(70% 0.015 260); --line: oklch(32% 0.012 260);
+    --do: oklch(74% 0.17 150); --maybe: oklch(82% 0.15 85); --skip: oklch(68% 0.19 25); --accent: oklch(74% 0.13 60);
+    --r: 18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+  body{background:
+      radial-gradient(1100px 700px at 88% -10%, oklch(26% 0.05 60 / .30), transparent 60%),
+      radial-gradient(900px 600px at -10% 108%, oklch(26% 0.05 250 / .26), transparent 60%), var(--bg);
+    color:var(--ink); font-family:-apple-system,"SF Pro Text",system-ui,sans-serif; line-height:1.55; min-height:100vh;
+    padding: clamp(1.1rem,.6rem+2.5vw,3.5rem) clamp(1rem,.5rem+2.5vw,3rem) 5rem;}
+  .wrap{max-width:1180px;margin:0 auto}
+  header{margin-bottom:2.4rem}
+  .eyebrow{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:.9rem}
+  h1{font-family:"New York",Georgia,serif;font-weight:600;letter-spacing:-.02em;line-height:1.02;font-size:clamp(2.3rem,1.1rem+5vw,4.6rem)}
+  h1 em{font-style:italic;color:var(--accent)}
+  .sub{color:var(--muted);font-size:clamp(.95rem,.9rem+.3vw,1.08rem);margin-top:1rem;max-width:54ch}
+  .scoreboard{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.7rem}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:.8rem 1.1rem;min-width:96px}
+  .stat .n{font-family:"New York",Georgia,serif;font-size:1.7rem;font-weight:600;line-height:1}
+  .stat .l{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:.3rem}
+  .stat.do .n{color:var(--do)} .stat.maybe .n{color:var(--maybe)} .stat.skip .n{color:var(--skip)}
+  .unsavebar{margin-top:1.3rem;background:oklch(68% 0.19 25 / .08);border:1px solid oklch(68% 0.19 25 / .3);border-radius:14px;padding:.9rem 1.1rem;font-size:.9rem;color:oklch(86% 0.04 40)}
+  .unsavebar b{color:var(--skip)}
+  .filters{position:sticky;top:0;z-index:20;display:flex;gap:.5rem;flex-wrap:wrap;margin:1.8rem 0 1.6rem;padding:.7rem 0;
+    backdrop-filter:blur(12px);background:linear-gradient(var(--bg),oklch(15% 0.01 260 / .6))}
+  .chip{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:.5rem .95rem;border-radius:999px;
+    font-size:.82rem;font-weight:600;letter-spacing:.02em;transition:.25s;user-select:none}
+  .chip:hover{border-color:oklch(45% 0.02 260);color:var(--ink)}
+  .chip.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .chip .c{opacity:.6;margin-left:.35rem}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.3rem}
+  @media(max-width:880px){ .grid{grid-template-columns:1fr} }
+  .grid[data-filter="do"] .card:not([data-v="do"]),
+  .grid[data-filter="maybe"] .card:not([data-v="maybe"]),
+  .grid[data-filter="skip"] .card:not([data-v="skip"]){display:none}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel) 55%,var(--panel-2));border:1px solid var(--line);
+    border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .35s}
+  .card:hover{transform:translateY(-3px)}
+  .card[data-v="do"]:hover{border-color:oklch(74% 0.17 150 / .5)}
+  .card[data-v="maybe"]:hover{border-color:oklch(82% 0.15 85 / .5)}
+  .card[data-v="skip"]:hover{border-color:oklch(68% 0.19 25 / .5)}
+  .shot{position:relative;background:#000;border-bottom:1px solid var(--line);aspect-ratio:16/10;overflow:hidden}
+  .shot img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+  .badge{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;gap:.45rem;font-size:.66rem;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;padding:.4rem .7rem;border-radius:8px;backdrop-filter:blur(8px)}
+  .b-do{background:oklch(20% 0.06 150 / .8);color:var(--do);border:1px solid oklch(74% 0.17 150 / .5)}
+  .b-maybe{background:oklch(22% 0.05 85 / .8);color:var(--maybe);border:1px solid oklch(82% 0.15 85 / .5)}
+  .b-skip{background:oklch(22% 0.06 25 / .8);color:var(--skip);border:1px solid oklch(68% 0.19 25 / .5)}
+  .pnum{position:absolute;top:12px;right:12px;font-family:"New York",Georgia,serif;font-weight:600;font-size:.95rem;width:32px;height:32px;
+    border-radius:50%;display:grid;place-items:center;background:oklch(10% 0 0 / .6);backdrop-filter:blur(8px);border:1px solid oklch(100% 0 0 / .18)}
+  .body{padding:1.25rem 1.35rem 1.4rem;display:flex;flex-direction:column;gap:.75rem;flex:1}
+  .body h2{font-family:"New York",Georgia,serif;font-weight:600;letter-spacing:-.01em;font-size:1.18rem;line-height:1.2}
+  .meta{font-size:.76rem;color:var(--muted)}
+  .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid oklch(74% 0.13 60 / .35)}
+  .meta .tag{display:inline-block;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:.05rem .4rem;margin-left:.4rem;font-size:.68rem;color:var(--muted)}
+  .rows{display:grid;gap:.55rem;margin-top:.2rem}
+  .row{display:grid;grid-template-columns:64px 1fr;gap:.7rem;align-items:start}
+  .k{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-top:.18rem}
+  .val{font-size:.88rem;color:oklch(89% 0.01 90)}
+  .val strong{color:var(--ink)}
+  .ventures{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.2rem}
+  .vt{font-size:.66rem;padding:.15rem .5rem;border-radius:999px;background:oklch(74% 0.13 60 / .12);color:var(--accent);border:1px solid oklch(74% 0.13 60 / .25)}
+  footer{margin-top:3rem;padding:1.7rem;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);color:var(--muted);font-size:.92rem}
+  .takeaway{font-size:1.1rem;color:var(--ink);font-family:"New York",Georgia,serif;line-height:1.5;margin-bottom:.6rem}
+  .stamp{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:oklch(55% 0.01 260);margin-top:.7rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Instagram &middot; Saved &middot; All Posts &middot; @bsk1604</div>
+    <h1>Saved-Posts <em>Review</em></h1>
+    <p class="sub">All 42 saved posts, opened one by one, read against your live ventures. Each carries a verdict &mdash; keep &amp; act, watch, or unsave. Filter below; tap any card to open the original post.</p>
+    <div class="scoreboard">
+      <div class="stat"><div class="n">42</div><div class="l">Total</div></div>
+      <div class="stat do"><div class="n">13</div><div class="l">Do / act</div></div>
+      <div class="stat maybe"><div class="n">16</div><div class="l">Maybe</div></div>
+      <div class="stat skip"><div class="n">13</div><div class="l">Unsave</div></div>
+    </div>
+    <div class="unsavebar">🔴 <b>Quick unsave list</b> &mdash; these added no venture value: #2, #8, #10, #12, #16, #18, #26, #27, #31, #32, #40, #41, #42.</div>
+  </header>
+  <nav class="filters" id="filters">
+    <span class="chip active" data-f="all">All<span class="c">42</span></span>
+    <span class="chip" data-f="do">🟢 Do<span class="c">13</span></span>
+    <span class="chip" data-f="maybe">🟡 Maybe<span class="c">16</span></span>
+    <span class="chip" data-f="skip">🔴 Unsave<span class="c">13</span></span>
+  </nav>
+  <main class="grid" id="grid" data-filter="all">
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">1</span>
+          <img loading="lazy" src="post1.png" alt="Codex “Record &amp; Replay” tasks">
+        </div>
+        <div class="body">
+          <h2>Codex “Record &amp; Replay” tasks</h2>
+          <div class="meta">@mr.eflow<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZ7df4QjS82/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">OpenAI Codex watches you do a GUI task once, saves it as a replayable “skill.”</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Concept you’ve solved in Claude already. Only new angle: demonstrate-once automation for <strong>GUI-only flows with no API</strong>.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Trial only on a portal flow Claude/MCP can’t click (Exceed listing upload).</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Exceed listing</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">2</span>
+          <img loading="lazy" src="post2.png" alt="“Tech &amp; AI moving faster than ever”">
+        </div>
+        <div class="body">
+          <h2>“Tech &amp; AI moving faster than ever”</h2>
+          <div class="meta">@technology<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZ5PydLlkKx/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Generic 7-day AI news roundup; caption admits claims are unverified.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">No tool, no technique, nothing to build. Pure doomscroll.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">3</span>
+          <img loading="lazy" src="post3.png" alt="6 new Claude skills for designers">
+        </div>
+        <div class="body">
+          <h2>6 new Claude skills for designers</h2>
+          <div class="meta">@adrien.ninet<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZp3_CJCPaI/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">UX Designer, Canvas→PNG, App Store Screenshots, Taste, Transitions, live React builder.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Your exact daily stack. “App Store Screenshots” → <strong>eSIM app assets</strong>; Canvas→PNG → your decks.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Fetch the repo, de-dupe vs ui-ux-pro-max/frontend-design/impeccable, install net-new.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">eSIM</span><span class="vt">Goody</span><span class="vt">AYUVA</span><span class="vt">Decks</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">4</span>
+          <img loading="lazy" src="post4.png" alt="“Claude Prompts 25 — creating skills”">
+        </div>
+        <div class="body">
+          <h2>“Claude Prompts 25 — creating skills”</h2>
+          <div class="meta">@visualaiclub<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZ5WcMijCrp/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">A 25-prompt pack for building Claude skills.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You’re past beginner skill-creation (you have skill-creator). Marginal unless a novel pattern hides inside.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Skim once for anything new; else unsave.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Claude ops</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">5</span>
+          <img loading="lazy" src="post5.png" alt="One screen, many computers">
+        </div>
+        <div class="body">
+          <h2>One screen, many computers</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZ5rhDUjeKh/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Software KVM — control multiple machines from one keyboard/screen.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You run a 5-Mac fleet (M16/M13/i13/donguri/mm). Mild ops convenience for bot-host juggling.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Check vs Apple Universal Control; adopt if it spans non-Apple too.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Mac fleet</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">6</span>
+          <img loading="lazy" src="post6.png" alt="“Motion” — a week of content from 1 prompt">
+        </div>
+        <div class="body">
+          <h2>“Motion” — a week of content from 1 prompt</h2>
+          <div class="meta">@bestapps.ai<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZ5rSp5DOx9/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">AI video tool turning one prompt into launch video + reels + logo anim + explainer; plugs into Claude.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You have no content team and every venture needs reels/ads (Dubamani→IG, eSIM, SUNG1975).</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Verify the tool is real (IG hype risk), trial on one venture’s launch reel.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Content</span><span class="vt">Dubamani</span><span class="vt">eSIM</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">7</span>
+          <img loading="lazy" src="post7.png" alt="Sakana Fugu — JP model router">
+        </div>
+        <div class="body">
+          <h2>Sakana Fugu — JP model router</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZ5qmluOm2b/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Tokyo’s Sakana AI: one API that routes to the best model and around cut-off providers.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">JP-relevant + provider-redundancy hedge. You’re all-in on Claude; a router matters only if you want a fallback.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Watch. Revisit if export-control noise threatens Claude access.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Japan</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">8</span>
+          <img loading="lazy" src="post8.png" alt="“Claude runs the Tony Robbins diagnosis”">
+        </div>
+        <div class="body">
+          <h2>“Claude runs the Tony Robbins diagnosis”</h2>
+          <div class="meta">@thinkgpt<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZzDya9GK8L/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">A prompt that makes Claude diagnose why you’re “stuck.”</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Self-help prompt, no venture leverage.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">9</span>
+          <img loading="lazy" src="post9.png" alt="“Stop prompting, build agent loops”">
+        </div>
+        <div class="body">
+          <h2>“Stop prompting, build agent loops”</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZ3MG9xyBtb/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Goal → code → compare to goal → retry until good.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You already run this (gan-build, santa-loop, workflows). Zero new info for you.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Keep only as a clean explainer to onboard Akito/team.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Claude ops</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">10</span>
+          <img loading="lazy" src="post10.png" alt="Japan FIFA World Cup 2026">
+        </div>
+        <div class="body">
+          <h2>Japan FIFA World Cup 2026</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZ2ZpvEz83b/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Japan national team hype reel.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Personal interest, no business angle.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">11</span>
+          <img loading="lazy" src="post11.png" alt="Design rule: 60-30-10 colour">
+        </div>
+        <div class="body">
+          <h2>Design rule: 60-30-10 colour</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZIQbgPxd8s/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">60% background, 30% content, 10% accent — guides the eye.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Solid heuristic for decks/landing pages; already embodied in your color-expert skill.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Keep as a quick reference; nothing to install.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Decks</span><span class="vt">Web</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">12</span>
+          <img loading="lazy" src="post12.png" alt="“Motion is out of this world”">
+        </div>
+        <div class="body">
+          <h2>“Motion is out of this world”</h2>
+          <div class="meta">#makemoney<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZ1Gs6uv2L3/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Hustle-framed repost of the Motion tool (#6).</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Low-info dupe of #6.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave; keep #6 instead.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">13</span>
+          <img loading="lazy" src="post13.png" alt="5 Claude Code skill repos">
+        </div>
+        <div class="body">
+          <h2>5 Claude Code skill repos</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZ2Km6WQIqv/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Repos that teach Claude to plan, self-review, security-audit, test, think like Karpathy.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Exactly the skill/agent curation you do. May overlap your installed agents — worth diffing.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Pull the 5 repos, compare to your agents, graft anything missing.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Claude ops</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">14</span>
+          <img loading="lazy" src="post14.png" alt="3D drink slider in Figma">
+        </div>
+        <div class="body">
+          <h2>3D drink slider in Figma</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DYmvj6yMIus/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Realistic 3D product slider with fluid motion.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Visual inspiration for high-end product UI (KEMURI, SUNG1975, eSIM).</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Save as motion reference; rebuild in code when a product page needs it.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">KEMURI</span><span class="vt">SUNG1975</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">15</span>
+          <img loading="lazy" src="post15.png" alt="Claude auto-posts to X &amp; Threads (JP)">
+        </div>
+        <div class="body">
+          <h2>Claude auto-posts to X &amp; Threads (JP)</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZ1oxzCBoZR/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">A Claude agent that auto-writes & posts to X/Threads, modelled on viral posts.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You want Dubamani repurposed to IG/ads and run socials across ventures. This is distribution automation.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Get the article, build a vault-driven auto-poster (draft-first, you approve).</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Dubamani</span><span class="vt">Content</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">16</span>
+          <img loading="lazy" src="post16.png" alt="Claude “Infinite Personal” mode">
+        </div>
+        <div class="body">
+          <h2>Claude “Infinite Personal” mode</h2>
+          <div class="meta">@evolvingai<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZzi998gDP0/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">A “mode” that teaches any skill from zero in 4 hours.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Speculative/named-mode hype, not a real feature.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">17</span>
+          <img loading="lazy" src="post17.png" alt="“Comment OS for the repo”">
+        </div>
+        <div class="body">
+          <h2>“Comment OS for the repo”</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZxV_o4PsjD/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Gated open-source repo — likely an agent “OS.”</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Can’t assess from the caption; engagement-gated. Low confidence.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">I open it and report back, or you unsave.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">?</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">18</span>
+          <img loading="lazy" src="post18.png" alt="“Comment BETTER and I’ll send it”">
+        </div>
+        <div class="body">
+          <h2>“Comment BETTER and I’ll send it”</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZxnFCljvGU/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">No content — pure comment-bait.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Nothing to evaluate.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">19</span>
+          <img loading="lazy" src="post19.png" alt="Claude + Meta Ads">
+        </div>
+        <div class="body">
+          <h2>Claude + Meta Ads</h2>
+          <div class="meta">@sebastianhardy_<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZu4OrVDNYP/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Use Claude to build & optimise Meta ad campaigns.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You run Meta ads (Dubamani→ads, Exceed, eSIM). Direct marketing leverage.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Pull the playbook; template it for one live ad set and measure.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Ads</span><span class="vt">Exceed</span><span class="vt">eSIM</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">20</span>
+          <img loading="lazy" src="post20.png" alt="Bram D Studio — multi-screen setup">
+        </div>
+        <div class="body">
+          <h2>Bram D Studio — multi-screen setup</h2>
+          <div class="meta">@bramdmedia<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZsCowJClX2/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Design-studio workflow / screen showcase.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Design inspiration; low signal from caption.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Browse for layout ideas or unsave.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Web</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">21</span>
+          <img loading="lazy" src="post21.png" alt="“Comment Brain for your guide”">
+        </div>
+        <div class="body">
+          <h2>“Comment Brain for your guide”</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZxdIwZslVj/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Gated “personal second-brain” guide.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You already have KAMAJI + vault — likely below your bar, but worth a glance for ideas.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Compare to KAMAJI; unsave if nothing new.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">KAMAJI</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">22</span>
+          <img loading="lazy" src="post22.png" alt="Open-source video editor Claude can drive">
+        </div>
+        <div class="body">
+          <h2>Open-source video editor Claude can drive</h2>
+          <div class="meta">@aitools.news<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZxFPZjjnTN/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">A founder open-sourced a timeline video editor Claude can edit on.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Programmatic, Claude-driven video = scalable content for every venture, self-hosted.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Find the repo, test a templated reel pipeline.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Content</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">23</span>
+          <img loading="lazy" src="post23.png" alt="Claude Code now supports Artifacts">
+        </div>
+        <div class="body">
+          <h2>Claude Code now supports Artifacts</h2>
+          <div class="meta">@ai.updater<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZvUYG4k1ke/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Anthropic added Artifacts support to Claude Code.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Feature awareness; as a power user you may already use it. Verify it’s real, not reposted hype.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Confirm in changelog; adopt if it speeds artifact previews.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Claude ops</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">24</span>
+          <img loading="lazy" src="post24.png" alt="Kimi K2.7 Code — cheap frontier model">
+        </div>
+        <div class="body">
+          <h2>Kimi K2.7 Code — cheap frontier model</h2>
+          <div class="meta">@moonshotai<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZu-rx9CF0P/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Open-source coding model, multimodal, ~10× cheaper than closed peers.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You’re Claude Max (cost isn’t the constraint), but your API-billed bot fleet could run cheaper on it.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Benchmark on one low-stakes bot before trusting output.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Bot fleet</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">25</span>
+          <img loading="lazy" src="post25.png" alt="“AI generates a site; taste decides what stays”">
+        </div>
+        <div class="body">
+          <h2>“AI generates a site; taste decides what stays”</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZupoEQR9BV/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Essay: the craft is in restraint, not generation.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Mirrors your anti-template design rules. Ethos, not action.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Keep as a manifesto / share with collaborators.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Web</span><span class="vt">Design</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">26</span>
+          <img loading="lazy" src="post26.png" alt="“Create an app with a single input”">
+        </div>
+        <div class="body">
+          <h2>“Create an app with a single input”</h2>
+          <div class="meta">#vibecoding<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZpJzzoSXfQ/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Generic vibecoding hype.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You’re years past this.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">27</span>
+          <img loading="lazy" src="post27.png" alt="“Generating 2B+ views per month”">
+        </div>
+        <div class="body">
+          <h2>“Generating 2B+ views per month”</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZoIROKMN5y/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Clickbait about a faceless-content view machine; no substance in caption.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Can’t verify any method; pure hook.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave unless you recall why you saved it.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">28</span>
+          <img loading="lazy" src="post28.png" alt="n8n + TinyFish — NL web scraping">
+        </div>
+        <div class="body">
+          <h2>n8n + TinyFish — NL web scraping</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DWGudkbD2UF/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">An n8n node that pulls live data from any site via plain English → JSON → Sheets/Slack.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You run n8n on donguri + TQHB lead-gen scraping. This is a drop-in for that pipeline.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Install the TinyFish node on donguri n8n; test against a TQHB lead source.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">TQHB</span><span class="vt">n8n</span><span class="vt">Exceed</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">29</span>
+          <img loading="lazy" src="post29.png" alt="“Unlocked: Mac Edition — LaunchOS”">
+        </div>
+        <div class="body">
+          <h2>“Unlocked: Mac Edition — LaunchOS”</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZuiMEVp5vw/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Mac power-user tips / a launcher tool.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You operate a Mac fleet; small ops/launch wins possible.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Cherry-pick any tip; otherwise unsave.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Mac fleet</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">30</span>
+          <img loading="lazy" src="post30.png" alt="Find almost any animated component">
+        </div>
+        <div class="body">
+          <h2>Find almost any animated component</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZmuKk7hzoY/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">A directory of sites for animated UI components.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Concrete, reusable resource for your high-end web work (AYUVA, Goody, decks).</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Save the directory link into your web-design references.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">AYUVA</span><span class="vt">Goody</span><span class="vt">Web</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">31</span>
+          <img loading="lazy" src="post31.png" alt="zablend.shop product ad">
+        </div>
+        <div class="body">
+          <h2>zablend.shop product ad</h2>
+          <div class="meta">@zablend.shop<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DXiO6uJDmVr/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">E-commerce gadget promo.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Unrelated to anything you run.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">32</span>
+          <img loading="lazy" src="post32.png" alt="“Comment Octo for the link”">
+        </div>
+        <div class="body">
+          <h2>“Comment Octo for the link”</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DX629jhtphR/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Unnamed tool behind comment-bait.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Nothing assessable.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">33</span>
+          <img loading="lazy" src="post33.png" alt="Kimi Work — 300 local agents on your laptop">
+        </div>
+        <div class="body">
+          <h2>Kimi Work — 300 local agents on your laptop</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZsFJLmpF_z/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Free desktop AI: reads local files, drives your browser, runs overnight; built decks + 30 sites in tests.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Aligns with your always-on agent ops & site/deck generation — but it reads local files & controls your browser.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">⚠ Privacy: trial only in a throwaway VM/account, never on the bot-host or with creds present.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Agents</span><span class="vt">⚠ security</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">34</span>
+          <img loading="lazy" src="post34.png" alt="BYQ — 2000+ premium sections for Claude">
+        </div>
+        <div class="body">
+          <h2>BYQ — 2000+ premium sections for Claude</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZo2MwBt2XB/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Add-on that makes Claude Code pull from 2000+ designed sections instead of generic output.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Directly attacks your “don’t ship template UI” rule — a section library for Claude builds.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Evaluate BYQ vs your frontend skills; adopt if output quality beats current.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Web</span><span class="vt">Goody</span><span class="vt">AYUVA</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">35</span>
+          <img loading="lazy" src="post35.png" alt="WhatsApp bot without Meta API — Part 3">
+        </div>
+        <div class="body">
+          <h2>WhatsApp bot without Meta API — Part 3</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZq7NMTsDVf/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Build a WhatsApp bot bypassing the official Meta API.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">This <strong>is</strong> your Kiki/Gigi stack (WPPConnect, non-Meta). Worth comparing their method.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Watch all parts; compare resilience vs your WPPConnect setup.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Kiki</span><span class="vt">Gigi</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">36</span>
+          <img loading="lazy" src="post36.png" alt="WhatsApp bot without Meta API — Part 1">
+        </div>
+        <div class="body">
+          <h2>WhatsApp bot without Meta API — Part 1</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZp7TWFsalO/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Part 1 of the no-Meta-API WhatsApp bot series.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Same as #35 — core to Kiki/Gigi. Free guide in comments.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Grab the guide; bank any hardening tricks for the WhatsApp fleet.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Kiki</span><span class="vt">Gigi</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">37</span>
+          <img loading="lazy" src="post37.png" alt="Higgsfield for website design">
+        </div>
+        <div class="body">
+          <h2>Higgsfield for website design</h2>
+          <div class="meta">@higgsfield.ai<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZsOktfzGHZ/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Higgsfield (AI image/video) applied to website visuals.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Possible source of hero/content visuals; partner-promo framing.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Trial for one venture hero; else unsave.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Content</span><span class="vt">Web</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="maybe">
+        <div class="shot">
+          <span class="badge b-maybe">🟡 Maybe</span>
+          <span class="pnum">38</span>
+          <img loading="lazy" src="post38.png" alt="“Is nicotine worth the risk?”">
+        </div>
+        <div class="body">
+          <h2>“Is nicotine worth the risk?”</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZHd0p7TzPQ/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Consumer take on nicotine risk.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Only relevant as <strong>KEMURI</strong> market/sentiment context (vape catalog).</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Keep in a KEMURI research note; otherwise personal.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">KEMURI</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="do">
+        <div class="shot">
+          <span class="badge b-do">🟢 Do / act</span>
+          <span class="pnum">39</span>
+          <img loading="lazy" src="post39.png" alt="Headroom — cut AI API bills up to 95%">
+        </div>
+        <div class="body">
+          <h2>Headroom — cut AI API bills up to 95%</h2>
+          <div class="meta">clip<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZpavmHNRtd/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Open-source proxy between agents & LLM: compresses logs/tool-output/history, learns from agent mistakes.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">You run many API-billed bots/agents — real token savings across the fleet, drop-in (Claude Code/LangChain).</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Pilot on one chatty bot, measure token delta before fleet-wide.</div></div>
+          </div>
+          <div class="ventures"><span class="vt">Bot fleet</span><span class="vt">KAMAJI</span></div>
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">40</span>
+          <img loading="lazy" src="post40.png" alt="“I quit my job to make apps”">
+        </div>
+        <div class="body">
+          <h2>“I quit my job to make apps”</h2>
+          <div class="meta">#buildinpublic<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZpD16PzXpr/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Solo-founder build-in-public vlog.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Motivational, not actionable.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">41</span>
+          <img loading="lazy" src="post41.png" alt="“Comment Codex for the link” (AD)">
+        </div>
+        <div class="body">
+          <h2>“Comment Codex for the link” (AD)</h2>
+          <div class="meta">#chatgpt<span class="tag">Reel</span> &middot; <a href="https://www.instagram.com/p/DZPwNatzdbt/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Sponsored Codex ad.</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Promo, no substance.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+      <article class="card" data-v="skip">
+        <div class="shot">
+          <span class="badge b-skip">🔴 Unsave</span>
+          <span class="pnum">42</span>
+          <img loading="lazy" src="post42.png" alt="Codex Sites/MCP → masterclass funnel">
+        </div>
+        <div class="body">
+          <h2>Codex Sites/MCP → masterclass funnel</h2>
+          <div class="meta">clip<span class="tag">Carousel</span> &middot; <a href="https://www.instagram.com/p/DZNA5i2DJYv/" target="_blank" rel="noopener">open ↗</a></div>
+          <div class="rows">
+            <div class="row"><div class="k">Claim</div><div class="val">Codex MCP hype that funnels to a paid “AI masterclass.”</div></div>
+            <div class="row"><div class="k">For you</div><div class="val">Course-seller funnel, not a tool.</div></div>
+            <div class="row"><div class="k">Plan</div><div class="val">Unsave.</div></div>
+          </div>
+          
+        </div>
+      </article>
+  </main>
+  <footer>
+    <p class="takeaway">The signal is concentrated: your saves are ~90% AI-tooling, and the real wins are the ones that plug into things you already run &mdash; WhatsApp-without-Meta-API (Kiki/Gigi), n8n scraping (TQHB), Claude + Meta Ads, auto-posting, and agent cost-compression.</p>
+    <p>Everything in the 🔴 column is engagement-bait or hype with no build behind it &mdash; unsave freely. The 🟡 column is reference/inspiration; keep if you browse for ideas, otherwise thin it out.</p>
+    <p class="stamp">42 posts &middot; captured 2026-06-23 &middot; opening frame + caption per post</p>
+  </footer>
+</div>
+<script>
+  var grid=document.getElementById('grid');
+  var chips=document.querySelectorAll('.chip');
+  for(var i=0;i<chips.length;i++){
+    chips[i].addEventListener('click',function(){
+      for(var j=0;j<chips.length;j++){chips[j].classList.remove('active');}
+      this.classList.add('active');
+      grid.setAttribute('data-filter', this.getAttribute('data-f'));
+    });
+  }
+</script>
+</body>
+</html>
